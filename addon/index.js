@@ -17,12 +17,14 @@ export default Ember.Mixin.create({
         data.relationships[key].data = this.serializeRecord(snapshot.belongsTo(relKey));
       }
 
-      if (relKind === "hasMany" && typeof(snapshot.hasMany(relKey)) !== "undefined") {
-        data.relationships[key].data = snapshot.hasMany(relKey).map(this.serializeRecord);
+      if (relKind === "hasMany") {
+        if (typeof(snapshot.hasMany(relKey)) !== "undefined") {
+          data.relationships[key].data = snapshot.hasMany(relKey).map(this.serializeRecord);
+        } else {
+          data.relationships[key] = {data: null};
+        }
       }
-
     }
-
   },
 
   serializeRecord(obj) {
